@@ -6,7 +6,7 @@ This website is a donation-based open-source service that allows users to use mu
 
 ### How does it work?
 
-All participants of a multisignature wallet use this website to join the same lobby together and generate a multisignature wallet. During this generation ceremony, the server will create a secret key **km** for every participant and the seeds **sn** of hundreds of wallets. Those seeds are then XOR'd with a provided size of pairs of keys, so that for a wallet with a size of two it is **kx ? ky ? sn**. The result of those pairs are called pads **pn** and, if later combined with the keys, will XOR to the correct seed, like **sn = kx ? ky ? pn**. After the generation ceremony, every user can download a file that includes a unique session ID, his key and all of the pads he needs to restore every wallet.
+All participants of a multisignature wallet use this website to join the same lobby together and generate a multisignature wallet. During this generation ceremony, the server will create a secret key **k<sup>n</sup>** for every participant and the seeds **s<sup>n</sup>** of hundreds of wallets. Those seeds are then XOR'd with a provided size of pairs of keys, so that for a wallet with a size of two it is **k<sup>x</sup>** ⊕ **k<sup>y</sup>** ⊕ **s<sup>n</sup>**. The result of those pairs are called pads **p<sup>n</sup>** and, if later combined with the keys, will XOR to the correct seed, like **s<sup>n</sup>** = **k<sup>x</sup>** ⊕ **k<sup>y</sup>** ⊕ **p<sup>n</sup>**. After the generation ceremony, every user can download a file that includes a unique session ID, his key and all of the pads he needs to restore every wallet.
 
 ### How safe is it?
 
