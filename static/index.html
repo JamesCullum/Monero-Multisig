@@ -1,0 +1,263 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Monero Multisig Wallet Generator</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link href="images/favicon.png" rel="icon" type="image/png">
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3">
+					 <div class="row chats-row">
+						<div class="col-md-12">
+							<div class="list-group-item" id="list-start">
+								<a href="javascript:void(0)" class="btn btn-lg btn-primary start">Start Session</a>
+							</div>
+							<div class="list-group-item" id="list-status" style="display: none">
+							   <div class="media-object img-circle avatar" id="ownColor" title="Your assigned avatar"></div>
+							   <p><b>Status</b>: <span id="status">Connecting...</span>
+							   <p><b>Assigned Name</b>: <span id="username">?</span></p>
+							</div>
+							<div class="list-group-item collapsed disabled" id="list-lobby">
+								<span class="title">Join a room</span> 
+								<div class="list-expandable">
+									<p>
+										You need to enter a lobby, identified by a pseudo-secret name, to generate or restore wallets in a live ceremony.
+									</p>
+									<form class="form-horizontal">
+										<fieldset>
+											<div class="form-group">
+											  <div class="col-lg-12">
+												<input type="text" class="form-control" id="lobby-name" placeholder="My secret lobby">
+											  </div>
+											</div>
+											<div class="form-group">
+												<div class="col-lg-12">
+												  <button type="submit" class="btn btn-primary" id="lobby-join">Connect</button>
+												</div>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+							<div class="list-group-item collapsed disabled" id="list-generate">
+								<span class="title">Create a multisign wallet</span> 
+								<div class="list-expandable">
+									<p>
+										Create a huge amount of wallets on the server and have the seed split into multiple parts. 
+										The seed can only be restored by a collaboration of a set amount of people providing their keys. 
+										You will get the wallet address and viewkey of a specific wallet (specified by its index) to check incoming transactions. 
+									</p>
+									<form class="form-horizontal">
+										<fieldset>
+											<div class="form-group">
+											  <label for="sigSize" class="col-lg-2 control-label">Ringsize</label>
+											  <div class="col-lg-10">
+												<input type="number" class="form-control" id="sigSize" value="2" min="2" max="4">
+												<span class="help-block">How many of the users in the room need to collaborate to access the seed?</span>
+											  </div>
+											</div>
+											<div class="form-group">
+											  <label for="numWallets" class="col-lg-2 control-label">Wallets</label>
+											  <div class="col-lg-10">
+												<input type="number" class="form-control" id="numWallets" value="100" min="100" max="10000">
+												<span class="help-block">How many wallets shall be created? 100 wallets take around 2 seconds.</span>
+											  </div>
+											</div>
+											<div class="form-group">
+											  <label for="generateIndex" class="col-lg-2 control-label">Index</label>
+											  <div class="col-lg-10">
+												<input type="number" class="form-control" id="generateIndex" value="1" min="1" max="100">
+												<span class="help-block">Choose a secret, clientside, index to output the information of a specific wallet amongst all created wallets.</span>
+											  </div>
+											</div>
+											<div class="form-group">
+												<div class="col-lg-12">
+												  <a href="javascript:void(0)" class="btn btn-success disabled" id="download">Download</a>
+												  <button type="submit" class="btn btn-primary" id="generate">Generate</button>
+												</div>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+							<div class="list-group-item collapsed disabled" id="list-restore">
+								<span class="title">Access a multisign wallet</span> 
+								<div class="list-expandable">
+									<p>
+										Access a wallet by uploading your key part to the server, allowing other users in your lobby to add their key.
+									</p>
+									<form class="form-horizontal">
+										<input type="file" id="fusionData">
+										<fieldset>
+											<div class="form-group">
+											  <label for="pickFusionFile" class="col-lg-2 control-label">Key</label>
+											  <div class="col-lg-10">
+												<button type="submit" class="btn btn-default form-control" id="pickFusionFile">Select File</button>
+											  </div>
+											</div>
+											<div class="form-group">
+											  <label for="fusionIndex" class="col-lg-2 control-label">Index</label>
+											  <div class="col-lg-10">
+												<input type="number" class="form-control" id="fusionIndex" value="1" min="1" max="500">
+												<span class="help-block">Enter the index of the wallet you agreed upon during creation. A different index will return the seed for a different wallet.</span>
+											  </div>
+											</div>
+											<div class="form-group">
+											  <label for="share" class="col-lg-2 control-label">Privacy</label>
+											  <div class="col-lg-10">
+												<div class="checkbox">
+												  <label>
+													<input type="checkbox" id="share" checked> Send the result of restoration ceremonys I initiated to me exclusively
+												  </label>
+												</div>
+											  </div>
+											</div>
+											<div class="form-group">
+												<div class="col-lg-12">
+												  <button type="submit" class="btn btn-warning" id="fusionClear" disabled>Clear</button>
+												  <button type="submit" class="btn btn-primary" id="fusionStart" disabled>Restore</button>
+												</div>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+							</div>
+							<div class="list-group-item" id="list-about">
+								<span class="title" style="display: none">About this website</span> 
+								<div class="list-expandable">
+									<a href="monero:donate@monero-merchants.com" class="btn btn-primary form-control">Donate now</a>
+									<p style="margin-top:10px">
+										This website is a donation-based <a href="https://github.com/JamesCullum/Monero-Multisig">open-source</a> service that allows users to use multisignature wallets in Monero today, even though the protocol doesn't allow this yet and probably won't for quite some time. 
+										Please consider donating to keep this service running.
+									</p>
+									<h4>How does it work?</h4>
+									<p>
+										All participants of a multisignature wallet use this website to join the same lobby together and generate a multisignature wallet. 
+										During this generation ceremony, the server will create a secret key <b class="math">k<sup>m</sup></b> for every participant and the seeds <b class="math">s<sup>n</sup></b> of hundreds of wallets. 
+										Those seeds are then XOR'd with a provided size of pairs of keys, so that for a wallet with a size of two it is <b class="math">k<sup>x</sup> &oplus; k<sup>y</sup> &oplus; s<sup>n</sup></b>. 
+										The result of those pairs are called pads <b class="math">p<sup>n</sup></b> and, if later combined with the keys, will XOR to the correct seed, like <b class="math">s<sup>n</sup> = k<sup>x</sup> &oplus; k<sup>y</sup> &oplus; p<sup>n</sup></b>.
+										After the generation ceremony, every user can download a file that includes a unique session ID, his key and all of the pads he needs to restore every wallet.
+									</p>
+									<h4>How safe is it?</h4>
+									<p>
+										The seeds are created on the server to prevent any party accessing it before a restoration ceremony took place. 
+										It needs to be known to at least one entity to create the address and viewkey without leaking the private spendkey. 
+										To reduce the impact of an attacker stealing the seed from memory, the wallets are created and always treated in batches of hundreds. 
+										Due to slow blockchain scanning in Monero and the huge amount of wallets that would need to be scanned regularily to track changes, this makes an attack <b>highly unfeasible</b>, especially for a low-budget donation-based service like this one. 
+										The most likely attack scenario is one of the participants, knowing the wallet that's been agreed upon, attempting to steal other users keys via malware and social engineering. 
+									</p>
+									<h4 class="text-muted">Credits</h4>
+									<p class="text-muted">
+										Cryptographic JS Library by <a href="https://xmr.llcoins.net/" target="_license">xmr.llcoins.net</a><br>
+										<a href="https://www.iconfinder.com/iconsets/user-avatars-1" target="_license">Explaination Avatars</a> by <a href="https://usersinsights.com/" target="_license">UserInsights</a> <a href="https://creativecommons.org/licenses/by/3.0/" target="_license">(CC BY 3.0)</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					 </div>
+				</div>
+				<div class="col-md-9 current-chat">
+					<div class="row visible-xs visible-sm">
+						<div class="panel-footer">
+							<div class="input-group">
+							  <input type="text" class="form-control sendText_Content" maxlength="250" placeholder="Your Message" disabled>
+							  <span class="input-group-btn">
+								<button class="btn btn-default sendText" type="button" disabled>Send</button>
+							  </span>
+							</div>
+						</div>
+					</div>
+					<div class="row current-chat-area">
+						<div class="col-md-12">
+							<div id="explaination">
+								<div class="row">
+									<h2>Introduction: The Trade</h2>
+									<div class="col-md-4">
+										<img src="images/alice-128.png" alt="Alice"> 
+										<img src="images/coin-trade-right-128.png" alt="Money" style="width:96px"><br>
+										This is <b>Alice</b>. 
+										She wants to buy a bible online and be confident she doesn't get scammed when sending money online.
+									</div>
+									<div class="col-md-offset-4 col-md-4">
+										<img src="images/bible-trade-left-128.png" alt="Bible" style="width:96px"> 
+										<img src="images/bob-128.png" alt="Bob"><br>
+										This is <b>Bob</b>. 
+										He sells bibles and accepts Monero as a payment method. 
+										He only delivers if he can be confident to get the money.
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<h2>The Ugly: Escrow</h2>
+									<div class="col-md-4">
+										<img src="images/alice-128.png" alt="Alice"> 
+										<img src="images/coin-trade-right-128.png" alt="Money" style="width:96px"><br>
+										<b>Alice</b> sends her money to <b>Claire</b>'s wallet and tells her when the bible arrived safely.
+									</div>
+									<div class="col-md-4">
+										<img src="images/coin-trade-both-128.png" alt="Money" style="width:96px;display:none"> 
+										<img src="images/claire-128.png" alt="Claire"><br>
+										This is <b>Claire</b>. 
+										She creates a wallet that <b>Alice</b> pays into and forwards it to <b>Bob</b> if the bible arrives.
+										<b class="text-danger">However, she can steal the money at any point!</b>
+									</div>
+									<div class="col-md-4">
+										<img src="images/bible-trade-left-128.png" alt="Bible" style="width:96px"> 
+										<img src="images/bob-128.png" alt="Bob"><br>
+										<b>Bob</b> sends the bible as soon as he gets the confirmation of payment. 
+										He will get the money from <b>Claire</b> after delivery.
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<h2>The Good: Multisignature Wallets</h2>
+									<div class="col-md-4">
+										<img src="images/key-128.png" alt="Key" style="width:64px"> 
+										<img src="images/alice-128.png" alt="Alice"> 
+										<img src="images/coin-trade-right-128.png" alt="Money" style="width:96px"><br>
+										<b>Alice</b> sends her money to the multisignature wallet so that nobody can access it on their own. 
+										If the bible arrives, she allows <b>Claire</b> to help <b>Bob</b> get the money. 
+										Otherwise <b>Claire</b> helps herself, <b>Alice</b>, get the money back.
+									</div>
+									<div class="col-md-4">
+										<img src="images/key-128.png" alt="Key" style="width:64px"> 
+										<img src="images/claire-128.png" alt="Claire"><br>
+										<b>Claire</b> gets a part of a key for the multisignature wallet. 
+										She can help <b>Alice</b> or <b>Bob</b> access the money, but can not do it on her own.
+									</div>
+									<div class="col-md-4">
+										<img src="images/bible-trade-left-128.png" alt="Bible" style="width:96px"> 
+										<img src="images/bob-128.png" alt="Bob"> 
+										<img src="images/key-128.png" alt="Key" style="width:64px"> <br>
+										<b>Bob</b> can see himself when the money is deposited. 
+										To access it, he needs the keys from <b>Alice</b> or <b>Claire</b>.
+									</div>
+								</div>
+							</div>
+							<ul class="media-list" id="chatList"></ul>  
+						</div>
+					</div>
+					<div class="row current-chat-footer hidden-xs hidden-sm" style="display: none">
+						<div class="panel-footer">
+							<div class="input-group">
+							  <input type="text" class="form-control sendText_Content" maxlength="250" placeholder="Your Message" disabled>
+							  <span class="input-group-btn">
+								<button class="btn btn-default sendText" type="button" disabled>Send</button>
+							  </span>
+							</div>
+					</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	
+		<script src="js/jquery-2.2.4.min.js"></script>
+		<script src="js/socket.io-1.4.5.js"></script>
+		<script src="js/sha3.min.js"></script>
+		<script src="js/inc.js"></script>
+		<script src="js/client.js"></script>
+	</body>
+</html>

@@ -1,0 +1,2 @@
+Header always set Strict-Transport-Security "max-age=10886400, includeSubDomains; preload"
+Header always set Cache-Control "max-age=2628000, public"
